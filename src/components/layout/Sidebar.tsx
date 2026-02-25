@@ -3,7 +3,6 @@ import {
   CalendarDays, 
   History, 
   Waves, 
-  Search,
   Star,
   Clock,
   MapPin

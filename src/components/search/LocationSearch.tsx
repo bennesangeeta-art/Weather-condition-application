@@ -3,7 +3,6 @@ import { Search, MapPin, X, Loader2 } from 'lucide-react';
 import { useLocationSearch } from '../../hooks/useWeather';
 import { useWeatherStore } from '../../store/weatherStore';
 import { GlassCard } from '../ui/GlassCard';
-import { cn } from '../../utils/cn';
 
 export const LocationSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');

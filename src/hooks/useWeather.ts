@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { weatherApi, WeatherAPIError } from '../services/weatherApi';
+import { weatherApi } from '../services/weatherApi';
 import { mockCurrentWeather, mockForecast, mockHistorical, mockLocations, USE_MOCK_DATA } from '../utils/mockData';
 import type { Unit } from '../types/weather';
 

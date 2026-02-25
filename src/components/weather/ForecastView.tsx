@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Calendar, ChevronDown, ChevronUp, Thermometer, Droplets, Wind, Sun } from 'lucide-react';
+import { Calendar, ChevronDown, ChevronUp, Droplets, Wind, Sun } from 'lucide-react';
 import { useForecast } from '../../hooks/useWeather';
 import { useWeatherStore } from '../../store/weatherStore';
 import { GlassCard } from '../ui/GlassCard';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { ErrorMessage } from '../ui/ErrorMessage';
-import { getUnitSymbol, getSpeedUnit, getWeatherIcon } from '../../utils/weatherIcons';
+import { getUnitSymbol, getSpeedUnit } from '../../utils/weatherIcons';
 import { format, parseISO } from 'date-fns';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 export const ForecastView = () => {
   const { currentLocation, unit } = useWeatherStore();
