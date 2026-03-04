@@ -1,43 +1,67 @@
 import type { CurrentWeather, ForecastResponse, HistoricalResponse, LocationResult } from '../types/weather';
 
-export const mockCurrentWeather = (location: string): CurrentWeather => ({
-  request: {
-    type: 'City',
-    query: location,
-    language: 'en',
-    unit: 'm',
-  },
-  location: {
-    name: location,
-    country: 'Demo Country',
-    region: 'Demo Region',
-    lat: '0.0',
-    lon: '0.0',
-    timezone_id: 'UTC',
-    localtime: new Date().toISOString(),
-    localtime_epoch: Math.floor(Date.now() / 1000),
-    utc_offset: '0.0',
-  },
-  current: {
-    observation_time: new Date().toLocaleTimeString(),
-    temperature: 22,
-    weather_code: 113,
-    weather_icons: ['https://cdn.weatherstack.com/images/wsymbols01_png_64/wsymbol_0001_sunny.png'],
-    weather_descriptions: ['Sunny'],
-    wind_speed: 10,
-    wind_degree: 180,
-    wind_dir: 'S',
-    pressure: 1015,
-    precip: 0,
-    humidity: 60,
-    cloudcover: 10,
-    feelslike: 24,
-    uv_index: 5,
-    visibility: 10,
-    is_day: 'yes',
-  },
-});
+export const getCountryName = (loc: string) => {
+  const l = loc.toLowerCase();
+  if (l.includes('beng') || l.includes('kashi') || l.includes('bldar') || l.includes('delhi') || l.includes('mumbai')) return 'India';
+  if (l.includes('london') || l.includes('uk')) return 'United Kingdom';
+  if (l.includes('york') || l.includes('usa')) return 'United States';
+  if (l.includes('paris')) return 'France';
+  if (l.includes('tokyo')) return 'Japan';
+  return 'India';
+};
 
+export const getDynTemp = (loc: string) => 18 + (loc.length % 16);
+export const getDynWeather = (loc: string) => {
+  const w = [
+    { code: 113, desc: 'Sunny', icon: 'wsymbol_0001_sunny.png' },
+    { code: 116, desc: 'Partly Cloudy', icon: 'wsymbol_0002_sunny_intervals.png' },
+    { code: 119, desc: 'Cloudy', icon: 'wsymbol_0003_white_cloud.png' },
+    { code: 296, desc: 'Light Rain', icon: 'wsymbol_0017_cloudy_with_light_rain.png' }
+  ];
+  return w[loc.length % w.length];
+};
+
+export const mockCurrentWeather = (location: string): CurrentWeather => {
+  const temp = getDynTemp(location);
+  const weather = getDynWeather(location);
+  return {
+    request: {
+      type: 'City',
+      query: location,
+      language: 'en',
+      unit: 'm',
+    },
+    location: {
+      name: location,
+      country: getCountryName(location),
+      region: 'Region',
+      lat: '0.0',
+      lon: '0.0',
+      timezone_id: 'UTC',
+      localtime: new Date().toISOString(),
+      localtime_epoch: Math.floor(Date.now() / 1000),
+      utc_offset: '0.0',
+    },
+    current: {
+      observation_time: new Date().toLocaleTimeString(),
+      temperature: temp,
+      weather_code: weather.code,
+      weather_icons: [`https://cdn.weatherstack.com/images/wsymbols01_png_64/${weather.icon}`],
+      weather_descriptions: [weather.desc],
+      wind_speed: 10,
+      wind_degree: 180,
+      wind_dir: 'S',
+      pressure: 1015,
+      precip: 0,
+      humidity: 60,
+      cloudcover: 10,
+      feelslike: temp + 2,
+      uv_index: 5,
+      visibility: 10,
+      is_day: 'yes',
+    },
+  };
+};
 export const mockForecast = (location: string): ForecastResponse => {
   const forecast: Record<string, {
     date: string;
@@ -93,7 +117,7 @@ export const mockForecast = (location: string): ForecastResponse => {
     const date = new Date();
     date.setDate(date.getDate() + i);
     const dateStr = date.toISOString().split('T')[0];
-    
+
     forecast[dateStr] = {
       date: dateStr,
       date_epoch: Math.floor(date.getTime() / 1000),
@@ -144,6 +168,8 @@ export const mockForecast = (location: string): ForecastResponse => {
       })),
     };
   }
+  const temp = getDynTemp(location);
+  const weather = getDynWeather(location);
 
   return {
     request: {
@@ -154,8 +180,8 @@ export const mockForecast = (location: string): ForecastResponse => {
     },
     location: {
       name: location,
-      country: 'Demo Country',
-      region: 'Demo Region',
+      country: getCountryName(location),
+      region: 'Region',
       lat: '0.0',
       lon: '0.0',
       timezone_id: 'UTC',
@@ -165,10 +191,10 @@ export const mockForecast = (location: string): ForecastResponse => {
     },
     current: {
       observation_time: new Date().toLocaleTimeString(),
-      temperature: 22,
-      weather_code: 113,
-      weather_icons: ['https://cdn.weatherstack.com/images/wsymbols01_png_64/wsymbol_0001_sunny.png'],
-      weather_descriptions: ['Sunny'],
+      temperature: temp,
+      weather_code: weather.code,
+      weather_icons: [`https://cdn.weatherstack.com/images/wsymbols01_png_64/${weather.icon}`],
+      weather_descriptions: [weather.desc],
       wind_speed: 10,
       wind_degree: 180,
       wind_dir: 'S',
@@ -176,7 +202,7 @@ export const mockForecast = (location: string): ForecastResponse => {
       precip: 0,
       humidity: 60,
       cloudcover: 10,
-      feelslike: 24,
+      feelslike: temp + 2,
       uv_index: 5,
       visibility: 10,
       is_day: 'yes',
@@ -189,8 +215,8 @@ export const mockLocations = (query: string): LocationResult[] => [
   {
     id: 1,
     name: query,
-    country: 'Demo Country',
-    region: 'Demo Region',
+    country: getCountryName(query),
+    region: 'Region',
     lat: '0.0',
     lon: '0.0',
     url: `weatherstack.com/${query.toLowerCase()}`,
@@ -198,7 +224,7 @@ export const mockLocations = (query: string): LocationResult[] => [
   {
     id: 2,
     name: `${query} City`,
-    country: 'Demo Country',
+    country: getCountryName(query),
     region: 'North',
     lat: '10.0',
     lon: '10.0',
@@ -207,7 +233,7 @@ export const mockLocations = (query: string): LocationResult[] => [
   {
     id: 3,
     name: `${query} Town`,
-    country: 'Another Country',
+    country: getCountryName(query),
     region: 'South',
     lat: '-10.0',
     lon: '-10.0',
@@ -328,8 +354,8 @@ export const mockHistorical = (location: string, date: string): HistoricalRespon
     },
     location: {
       name: location,
-      country: 'Demo Country',
-      region: 'Demo Region',
+      country: getCountryName(location),
+      region: 'Region',
       lat: '0.0',
       lon: '0.0',
       timezone_id: 'UTC',

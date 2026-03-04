@@ -77,7 +77,7 @@ export const useMarine = (query: string, unit: Unit = 'm') => {
           },
           location: {
             name: query,
-            country: 'Demo Country',
+            country: 'India',
             region: 'Coastal Region',
             lat: '0.0',
             lon: '0.0',
